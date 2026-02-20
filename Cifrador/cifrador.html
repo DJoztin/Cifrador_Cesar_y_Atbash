@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CryptoClásico — Cifrado César & Atbash</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">Sistema de Criptografía Clásica</div>
+      <h1>CryptoClásico</h1>
+      <p>Cifrado César &amp; Atbash · Basado en ASCII</p>
+    </header>
+
+    <div class="container">
+      <!-- Selección de módulo -->
+      <div class="module-select">
+        <button class="module-btn cesar active" onclick="selectModule('cesar')">
+          <div class="tag">Módulo I</div>
+          <h3>Cifrado César</h3>
+          <p>
+            Desplaza cada carácter N posiciones en el conjunto de caracteres
+            definido.
+          </p>
+        </button>
+        <button class="module-btn atbash" onclick="selectModule('atbash')">
+          <div class="tag">Módulo II</div>
+          <h3>Cifrado Atbash</h3>
+          <p>
+            Invierte el conjunto de caracteres: el primero ↔ último, segundo ↔
+            penúltimo…
+          </p>
+        </button>
+      </div>
+
+      <!-- Panel principal -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="status-dot"></div>
+          <span class="panel-title" id="panelTitle">Módulo César</span>
+          <span class="badge" id="moduleBadge">CÉSAR</span>
+        </div>
+
+        <!-- Conjunto de caracteres -->
+        <div class="charset-section">
+          <label>Conjunto de Caracteres (Charset)</label>
+          <input
+            type="text"
+            id="charset"
+            value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,;:!?-_@#"
+          />
+          <div class="charset-hint">
+            Puedes modificar los caracteres usados para el cifrado. El orden
+            importa.
+          </div>
+        </div>
+
+        <!-- Desplazamiento (solo César) -->
+        <div id="shiftSection" class="shift-section">
+          <div>
+            <label>Desplazamiento (Clave César)</label>
+            <input
+              type="range"
+              id="shiftRange"
+              min="1"
+              max="25"
+              value="3"
+              oninput="updateShift()"
+            />
+          </div>
+          <div class="shift-display" id="shiftVal">3</div>
+        </div>
+
+        <!-- Texto de entrada -->
+        <div>
+          <label>Texto de Entrada</label>
+          <textarea
+            id="inputText"
+            placeholder="Escribe aquí el mensaje a cifrar o descifrar..."
+          ></textarea>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- Botones -->
+        <div class="action-row">
+          <button class="btn btn-cipher" onclick="process('cipher')">
+            ⬆ Cifrar
+          </button>
+          <button class="btn btn-decipher" onclick="process('decipher')">
+            ⬇ Descifrar
+          </button>
+          <button class="btn btn-clear" onclick="clearAll()">
+            ✕ Limpiar todo
+          </button>
+        </div>
+
+        <!-- Resultado -->
+        <div class="result-section" id="resultSection">
+          <div class="result-label">
+            <span id="resultLabel">Resultado</span>
+            <button class="copy-btn" onclick="copyResult()">Copiar</button>
+          </div>
+          <div class="result-text" id="resultText">
+            El resultado aparecerá aquí...
+          </div>
+        </div>
+      </div>
+
+      <!-- Visualización del mapeo -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Tabla de Sustitución</span>
+        </div>
+        <div style="font-size: 12px; color: var(--muted); margin-bottom: 12px">
+          <span style="color: var(--accent)">■</span> Original &nbsp;→&nbsp;
+          <span style="color: var(--accent2)">■</span> Cifrado
+        </div>
+        <div class="alpha-visual">
+          <div class="alpha-table" id="alphaTable"></div>
+        </div>
+      </div>
+
+      <!-- Info cards -->
+      <div class="info-grid">
+        <div class="info-card">
+          <strong>César (100 a.C.)</strong>
+          Usado por Julio César para comunicaciones militares. Desplaza cada
+          letra N posiciones en el alfabeto. Con un charset de N caracteres,
+          solo hay N-1 claves posibles, haciéndolo vulnerable al análisis de
+          frecuencias descrito por Al-Kindi en el siglo IX.
+        </div>
+        <div class="info-card">
+          <strong>Atbash (~600 a.C.)</strong>
+          Cifrado hebreo que invierte el alfabeto: Alef→Tav, Bet→Shin, etc. Es
+          en realidad un caso especial de César con clave = mitad del alfabeto.
+          No tiene clave variable, por lo que su criptoanálisis es trivial.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
