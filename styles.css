@@ -390,32 +390,6 @@
     color: var(--muted);
   }
 
-  /* ── INFO CARDS ── */
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 8px;
-  }
-
-  .info-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-
-  .info-card strong {
-    display: block;
-    color: var(--text);
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    margin-bottom: 8px;
-  }
-
   /* ── ESTADO ACTIVO ── */
   .status-bar {
     display: flex;
@@ -460,7 +434,7 @@
   .sep { height: 1px; background: var(--border); margin: 24px 0; }
 
   @media (max-width: 600px) {
-    .module-select, .action-row, .info-grid { grid-template-columns: 1fr; }
+    .module-select, .action-row { grid-template-columns: 1fr; }
     .shift-section { grid-template-columns: 1fr; }
     .btn-clear { grid-column: 1; }
   }
