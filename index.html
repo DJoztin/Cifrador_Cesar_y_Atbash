@@ -1,138 +1,821 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CryptoClásico — Cifrado César & Atbash</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700;900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
- 
-  </head>
-  <body>
-    <header>
-      <div class="eyebrow">Sistema de Criptografía Clásica</div>
-      <h1>CryptoClásico</h1>
-      <p>Cifrado César &amp; Atbash · Basado en ASCII</p>
-    </header>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoClásico — Cifrado César & Atbash</title>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #2a2a3a;
+    --accent: #c8a96e;
+    --accent2: #6ec8a9;
+    --text: #e8e0d0;
+    --muted: #7a7a8a;
+    --red: #c86e6e;
+  }
 
-    <div class="container">
-      <!-- Selección de módulo -->
-      <div class="module-select">
-        <button class="module-btn cesar active" onclick="selectModule('cesar')">
-          <div class="tag">Módulo I</div>
-          <h3>Cifrado César</h3>
-          <p>
-            Desplaza cada carácter N posiciones en el conjunto de caracteres
-            definido.
-          </p>
-        </button>
-        <button class="module-btn atbash" onclick="selectModule('atbash')">
-          <div class="tag">Módulo II</div>
-          <h3>Cifrado Atbash</h3>
-          <p>
-            Invierte el conjunto de caracteres: el primero ↔ último, segundo ↔
-            penúltimo…
-          </p>
-        </button>
-      </div>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-      <!-- Panel principal -->
-      <div class="panel">
-        <div class="panel-header">
-          <div class="status-dot"></div>
-          <span class="panel-title" id="panelTitle">Módulo César</span>
-          <span class="badge" id="moduleBadge">CÉSAR</span>
-        </div>
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(200,169,110,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(110,200,169,0.05) 0%, transparent 50%);
+  }
 
-        <!-- Conjunto de caracteres -->
-        <div class="charset-section">
-          <label>Conjunto de Caracteres (Charset)</label>
-          <input
-            type="text"
-            id="charset"
-            value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,;:!?-_@#"
-          />
-          <div class="charset-hint">
-            Puedes modificar los caracteres usados para el cifrado. El orden
-            importa.
-          </div>
-        </div>
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeDown 0.8s ease both;
+  }
 
-        <!-- Desplazamiento (solo César) -->
-        <div id="shiftSection" class="shift-section">
-          <div>
-            <label>Desplazamiento (Clave César)</label>
-            <input
-              type="range"
-              id="shiftRange"
-              min="1"
-              max="25"
-              value="3"
-              oninput="updateShift()"
-            />
-          </div>
-          <div class="shift-display" id="shiftVal">3</div>
-        </div>
+  header .eyebrow {
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
 
-        <!-- Texto de entrada -->
-        <div>
-          <label>Texto de Entrada</label>
-          <textarea
-            id="inputText"
-            placeholder="Escribe aquí el mensaje a cifrar o descifrar..."
-          ></textarea>
-        </div>
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--text) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-        <div class="sep"></div>
+  header p {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
 
-        <!-- Botones -->
-        <div class="action-row">
-          <button class="btn btn-cipher" onclick="process('cipher')">
-            ⬆ Cifrar
-          </button>
-          <button class="btn btn-decipher" onclick="process('decipher')">
-            ⬇ Descifrar
-          </button>
-          <button class="btn btn-clear" onclick="clearAll()">
-            ✕ Limpiar todo
-          </button>
-        </div>
+  .container {
+    width: 100%;
+    max-width: 860px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
 
-        <!-- Resultado -->
-        <div class="result-section" id="resultSection">
-          <div class="result-label">
-            <span id="resultLabel">Resultado</span>
-            <button class="copy-btn" onclick="copyResult()">Copiar</button>
-          </div>
-          <div class="result-text" id="resultText">
-            El resultado aparecerá aquí...
-          </div>
-        </div>
-      </div>
+  /* ── MÓDULO SELECTOR ── */
+  .module-select {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
 
-      <!-- Visualización del mapeo -->
-      <div class="panel">
-        <div class="panel-header">
-          <span class="panel-title">Tabla de Sustitución</span>
-        </div>
-        <div style="font-size: 12px; color: var(--muted); margin-block-end: 12px">
-          <span style="color: var(--accent)">■</span> Original &nbsp;→&nbsp;
-          <span style="color: var(--accent2)">■</span> Cifrado
-        </div>
-        <div class="alpha-visual">
-          <div class="alpha-table" id="alphaTable"></div>
-        </div>
-      </div>
+  .module-btn {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
 
+  .module-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .module-btn.cesar::before { background: linear-gradient(135deg, rgba(200,169,110,0.1), transparent); }
+  .module-btn.atbash::before { background: linear-gradient(135deg, rgba(110,200,169,0.1), transparent); }
+
+  .module-btn:hover::before,
+  .module-btn.active::before { opacity: 1; }
+
+  .module-btn.active.cesar { border-color: var(--accent); }
+  .module-btn.active.atbash { border-color: var(--accent2); }
+
+  .module-btn .tag {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .cesar .tag { color: var(--accent); }
+  .atbash .tag { color: var(--accent2); }
+
+  .module-btn h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .module-btn p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── PANEL ── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+  }
+
+  .badge {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(200,169,110,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(200,169,110,0.3);
+  }
+
+  .badge.atbash-badge {
+    background: rgba(110,200,169,0.15);
+    color: var(--accent2);
+    border-color: rgba(110,200,169,0.3);
+  }
+
+  /* ── CHARSET ── */
+  .charset-section {
+    margin-bottom: 24px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: var(--accent);
+  }
+
+  textarea { min-height: 100px; }
+
+  .charset-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── DESPLAZAMIENTO ── */
+  .shift-section {
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: end;
+  }
+
+  .shift-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--accent);
+    text-align: center;
+    padding: 8px;
+    background: rgba(200,169,110,0.08);
+    border: 1px solid rgba(200,169,110,0.2);
+    border-radius: 6px;
+    min-width: 70px;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    outline: none;
+    margin: 8px 0;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+
+  /* ── BOTONES ACCIÓN ── */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+
+  .btn-cipher {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn-cipher:hover { background: #d4b87a; transform: translateY(-1px); }
+
+  .btn-decipher {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+  }
+
+  .btn-decipher:hover { background: rgba(200,169,110,0.1); }
+
+  .btn-clear {
+    grid-column: 1 / -1;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    padding: 10px;
+  }
+
+  .btn-clear:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── RESULTADO ── */
+  .result-section {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .result-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .copy-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid rgba(200,169,110,0.3);
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: rgba(200,169,110,0.1); }
+
+  .result-text {
+    font-size: 16px;
+    color: var(--accent2);
+    line-height: 1.6;
+    min-height: 48px;
+    word-break: break-all;
+    font-style: italic;
+  }
+
+  /* ── VISUALIZACIÓN ALFABETO ── */
+  .alpha-visual {
+    margin-top: 24px;
+    overflow-x: auto;
+  }
+
+  .alpha-table {
+    display: flex;
+    gap: 2px;
+    min-width: max-content;
+    padding: 4px;
+  }
+
+  .alpha-pair {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .alpha-char {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  .alpha-orig {
+    background: rgba(200,169,110,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(200,169,110,0.2);
+  }
+
+  .alpha-enc {
+    background: rgba(110,200,169,0.15);
+    color: var(--accent2);
+    border: 1px solid rgba(110,200,169,0.2);
+  }
+
+  .alpha-arrow {
+    font-size: 8px;
+    color: var(--muted);
+  }
+
+  /* ── INFO CARDS ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .info-card strong {
+    display: block;
+    color: var(--text);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  /* ── ESTADO ACTIVO ── */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes flash {
+    0%, 100% { background: transparent; }
+    50% { background: rgba(110,200,169,0.2); }
+  }
+
+  .flash { animation: flash 0.5s ease; }
+
+  /* ── SEPARATOR ── */
+  .sep { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* ── FUERZA BRUTA ── */
+  .brute-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 24px;
+    display: none;
+  }
+
+  .brute-panel.visible { display: block; }
+
+  .brute-intro {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.7;
+    padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: rgba(200,169,110,0.05);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .brute-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+
+  .brute-tab {
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .brute-tab.active {
+    background: rgba(200,169,110,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .brute-results {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .brute-results::-webkit-scrollbar { width: 4px; }
+  .brute-results::-webkit-scrollbar-track { background: var(--bg); }
+  .brute-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .brute-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .brute-row:hover { border-color: var(--accent2); background: rgba(110,200,169,0.04); }
+
+  .brute-key {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--accent);
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .brute-text {
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .brute-use-btn {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--accent2);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--accent2);
+    cursor: pointer;
+    font-family: 'Courier Prime', monospace;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .brute-use-btn:hover { background: rgba(110,200,169,0.15); }
+
+  .brute-atbash-result {
+    padding: 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--accent2);
+    font-style: italic;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .brute-atbash-result:hover { border-color: var(--accent2); }
+
+  .brute-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 32px;
+    font-size: 13px;
+  }
+
+  .btn-brute {
+    grid-column: 1 / -1;
+    background: rgba(200,169,110,0.1);
+    color: var(--accent);
+    border: 1px dashed var(--accent);
+    padding: 12px;
+    font-size: 11px;
+  }
+
+  .btn-brute:hover { background: rgba(200,169,110,0.2); }
+
+  @media (max-width: 600px) {
+    .module-select, .action-row, .info-grid { grid-template-columns: 1fr; }
+    .shift-section { grid-template-columns: 1fr; }
+    .btn-clear { grid-column: 1; }
+    .brute-row { grid-template-columns: auto 1fr; }
+    .brute-use-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Sistema de Criptografía Clásica</div>
+  <h1>CryptoClásico</h1>
+  <p>Cifrado César &amp; Atbash · Basado en ASCII</p>
+</header>
+
+<div class="container">
+
+  <!-- Selección de módulo -->
+  <div class="module-select">
+    <button class="module-btn cesar active" onclick="selectModule('cesar')">
+      <div class="tag">Módulo I</div>
+      <h3>Cifrado César</h3>
+      <p>Desplaza cada carácter N posiciones en el conjunto de caracteres definido.</p>
+    </button>
+    <button class="module-btn atbash" onclick="selectModule('atbash')">
+      <div class="tag">Módulo II</div>
+      <h3>Cifrado Atbash</h3>
+      <p>Invierte el conjunto de caracteres: el primero ↔ último, segundo ↔ penúltimo…</p>
+    </button>
+  </div>
+
+  <!-- Panel principal -->
+  <div class="panel">
+    <div class="panel-header">
+      <div class="status-dot"></div>
+      <span class="panel-title" id="panelTitle">Módulo César</span>
+      <span class="badge" id="moduleBadge">CÉSAR</span>
     </div>
-    
-    <script>
-      
+
+    <!-- Conjunto de caracteres -->
+    <div class="charset-section">
+      <label>Conjunto de Caracteres (Charset)</label>
+      <input type="text" id="charset" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,;:!?-_@#" />
+      <div class="charset-hint">Puedes modificar los caracteres usados para el cifrado. El orden importa.</div>
+    </div>
+
+    <!-- Desplazamiento (solo César) -->
+    <div id="shiftSection" class="shift-section">
+      <div>
+        <label>Desplazamiento (Clave César)</label>
+        <input type="range" id="shiftRange" min="1" max="999" value="3" oninput="updateShift()" />
+      </div>
+      <div class="shift-display" id="shiftVal">3</div>
+    </div>
+
+    <!-- Texto de entrada -->
+    <div>
+      <label>Texto de Entrada</label>
+      <textarea id="inputText" placeholder="Escribe aquí el mensaje a cifrar o descifrar..."></textarea>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Botones -->
+    <div class="action-row">
+      <button class="btn btn-cipher" onclick="process('cipher')">⬆ Cifrar</button>
+      <button class="btn btn-decipher" onclick="process('decipher')">⬇ Descifrar</button>
+      <button class="btn btn-brute" onclick="toggleBrute()">🔍 Descifrar por Fuerza Bruta (todas las claves)</button>
+      <button class="btn btn-clear" onclick="clearAll()">✕ Limpiar todo</button>
+    </div>
+
+    <!-- Resultado -->
+    <div class="result-section" id="resultSection">
+      <div class="result-label">
+        <span id="resultLabel">Resultado</span>
+        <button class="copy-btn" onclick="copyResult()">Copiar</button>
+      </div>
+      <div class="result-text" id="resultText">El resultado aparecerá aquí...</div>
+    </div>
+  </div>
+
+  <!-- Panel fuerza bruta -->
+  <div class="brute-panel" id="brutePanel">
+    <div class="panel-header">
+      <span class="panel-title">🔍 Fuerza Bruta — Todas las claves posibles</span>
+    </div>
+    <div class="brute-intro">
+      Se muestran <strong>todas las combinaciones posibles</strong> de descifrado. Esto demuestra por qué César y Atbash son inseguros: un atacante solo necesita revisar esta lista para encontrar el mensaje original sin conocer la clave. Haz clic en <strong>Usar</strong> para seleccionar el resultado correcto.
+    </div>
+    <div class="brute-tabs">
+      <button class="brute-tab active" onclick="showBruteTab('cesar')" id="tabCesar">César (todas las claves)</button>
+      <button class="brute-tab" onclick="showBruteTab('atbash')" id="tabAtbash">Atbash (resultado único)</button>
+    </div>
+    <div class="brute-results" id="bruteResults"></div>
+  </div>
+
+  <!-- Visualización del mapeo -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Tabla de Sustitución</span>
+    </div>
+    <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+      <span style="color:var(--accent)">■</span> Original &nbsp;→&nbsp;
+      <span style="color:var(--accent2)">■</span> Cifrado
+    </div>
+    <div class="alpha-visual">
+      <div class="alpha-table" id="alphaTable"></div>
+    </div>
+  </div>
+
+  <!-- Info cards -->
+  <div class="info-grid">
+    <div class="info-card">
+      <strong>César (100 a.C.)</strong>
+      Usado por Julio César para comunicaciones militares. Desplaza cada letra N posiciones en el alfabeto. Con un charset de N caracteres, solo hay N-1 claves posibles, haciéndolo vulnerable al análisis de frecuencias descrito por Al-Kindi en el siglo IX.
+    </div>
+    <div class="info-card">
+      <strong>Atbash (~600 a.C.)</strong>
+      Cifrado hebreo que invierte el alfabeto: Alef→Tav, Bet→Shin, etc. Es en realidad un caso especial de César con clave = mitad del alfabeto. No tiene clave variable, por lo que su criptoanálisis es trivial.
+    </div>
+  </div>
+
+</div>
+
+<script>
   // ─── ESTADO ───
   let currentModule = 'cesar';
+  let bruteVisible = false;
+  let bruteTab = 'cesar';
+
+  // ─── FUERZA BRUTA ───
+  function toggleBrute() {
+    const text = document.getElementById('inputText').value;
+    if (!text.trim()) {
+      alert('Ingresa un texto cifrado primero.');
+      return;
+    }
+    bruteVisible = !bruteVisible;
+    const panel = document.getElementById('brutePanel');
+    panel.classList.toggle('visible', bruteVisible);
+    if (bruteVisible) {
+      renderBrute();
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function showBruteTab(tab) {
+    bruteTab = tab;
+    document.getElementById('tabCesar').classList.toggle('active', tab === 'cesar');
+    document.getElementById('tabAtbash').classList.toggle('active', tab === 'atbash');
+    renderBrute();
+  }
+
+  function renderBrute() {
+    const text = document.getElementById('inputText').value;
+    const charset = getCharset();
+    const container = document.getElementById('bruteResults');
+    container.innerHTML = '';
+
+    if (bruteTab === 'atbash') {
+      // Atbash solo tiene un resultado
+      const result = atbashCipher(text, charset);
+      const div = document.createElement('div');
+      div.className = 'brute-atbash-result';
+      div.title = 'Clic para usar este resultado';
+      div.textContent = result;
+      div.onclick = () => useResult(result);
+      container.appendChild(div);
+
+      const hint = document.createElement('div');
+      hint.style.cssText = 'font-size:11px;color:var(--muted);margin-top:10px;text-align:center;';
+      hint.textContent = 'Atbash no tiene clave variable — solo existe un resultado posible. Haz clic para usarlo.';
+      container.appendChild(hint);
+      return;
+    }
+
+    // César: probar todas las claves
+    const n = charset.length;
+    for (let k = 1; k < n; k++) {
+      const result = cesarCipher(text, charset, k, true);
+      const row = document.createElement('div');
+      row.className = 'brute-row';
+      row.style.animationDelay = `${k * 15}ms`;
+      row.innerHTML = `
+        <div class="brute-key">${k}</div>
+        <div class="brute-text" title="${escapeHtml(result)}">${escapeHtml(result)}</div>
+        <button class="brute-use-btn" onclick="useResult('${escapeHtml(result).replace(/'/g,"\\'")}')">Usar</button>
+      `;
+      row.onclick = (e) => {
+        if (!e.target.classList.contains('brute-use-btn')) useResult(result);
+      };
+      container.appendChild(row);
+    }
+  }
+
+  function useResult(text) {
+    document.getElementById('resultText').textContent = text;
+    document.getElementById('resultLabel').textContent = '🔓 Texto Descifrado (seleccionado)';
+    document.getElementById('resultText').classList.remove('flash');
+    void document.getElementById('resultText').offsetWidth;
+    document.getElementById('resultText').classList.add('flash');
+    document.querySelector('.result-section').scrollIntoView({ behavior: 'smooth' });
+  }
 
   // ─── MÓDULO ───
   function selectModule(mod) {
@@ -156,6 +839,15 @@
     const val = document.getElementById('shiftRange').value;
     document.getElementById('shiftVal').textContent = val;
     renderAlphaTable();
+  }
+
+  function updateShiftMax() {
+    const n = getCharset().length;
+    const range = document.getElementById('shiftRange');
+    const max = Math.max(1, n - 1);
+    range.max = max;
+    if (parseInt(range.value) > max) range.value = max;
+    document.getElementById('shiftVal').textContent = range.value;
   }
 
   // ─── LÓGICA CENTRAL ───
@@ -230,6 +922,8 @@
     document.getElementById('inputText').value = '';
     document.getElementById('resultText').textContent = 'El resultado aparecerá aquí...';
     document.getElementById('resultLabel').textContent = 'Resultado';
+    bruteVisible = false;
+    document.getElementById('brutePanel').classList.remove('visible');
   }
 
   // ─── TABLA DE SUSTITUCIÓN ───
@@ -273,13 +967,14 @@
   }
 
   // ─── INIT ───
+  updateShiftMax();
   renderAlphaTable();
 
-  // Actualizar tabla al cambiar charset
-  document.getElementById('charset').addEventListener('input', renderAlphaTable);
-
-    </script>
-  </body>
-
-     
+  // Actualizar tabla y slider al cambiar charset
+  document.getElementById('charset').addEventListener('input', () => {
+    updateShiftMax();
+    renderAlphaTable();
+  });
+</script>
+</body>
 </html>
