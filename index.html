@@ -722,17 +722,6 @@
       <div class="alpha-table" id="alphaTable"></div>
     </div>
   </div>
-
-  <!-- Info cards -->
-  <div class="info-grid">
-    <div class="info-card">
-      <strong>César (100 a.C.)</strong>
-      Usado por Julio César para comunicaciones militares. Desplaza cada letra N posiciones en el alfabeto. Con un charset de N caracteres, solo hay N-1 claves posibles, haciéndolo vulnerable al análisis de frecuencias descrito por Al-Kindi en el siglo IX.
-    </div>
-    <div class="info-card">
-      <strong>Atbash (~600 a.C.)</strong>
-      Cifrado hebreo que invierte el alfabeto: Alef→Tav, Bet→Shin, etc. Es en realidad un caso especial de César con clave = mitad del alfabeto. No tiene clave variable, por lo que su criptoanálisis es trivial.
-    </div>
   </div>
 
 </div>
@@ -766,6 +755,38 @@
     renderBrute();
   }
 
+  // ─── DICCIONARIO ESPAÑOL ───
+  const DICT_ES = new Set([
+    'el','la','los','las','un','una','unos','unas','lo',
+    'yo','tu','el','ella','nosotros','ellos','ellas','me','te','se','nos',
+    'mi','mis','tus','su','sus','le','les',
+    'de','del','al','en','con','por','para','sin','sobre','entre','hasta',
+    'desde','hacia','ante','bajo','tras','y','o','u','e','pero','sino',
+    'que','si','como','cuando','donde','aunque','porque','pues','ni',
+    'es','son','era','fue','ser','estar','tiene','tienen','hay','haber',
+    'hace','hacer','puede','pueden','debe','deben','dice','sabe','quiere',
+    'va','van','da','dan','ver','ir','asi','sido','tenido','hecho',
+    'no','mas','muy','bien','mal','todo','todos','nada','algo','alguien',
+    'aqui','alli','hoy','ayer','ya','aun','solo','siempre','nunca','antes',
+    'este','esta','estos','estas','ese','esa','esos','esas','aquel',
+    'cual','quien','cuanto','tanto','tan','cada','otro','otra','mismo','misma',
+    'casa','tiempo','dia','vida','manera','forma','parte','lugar','punto',
+    'mundo','hombre','mujer','persona','gente','vez','ano','trabajo','cosa',
+    'agua','ciudad','pais','nombre','mano','hecho','caso','vez','modo',
+    'nuevo','nueva','gran','grande','primer','primera','ultimo','ultima',
+    'dos','tres','uno','primera','segundo','tercero',
+  ]);
+
+  function scoreText(txt) {
+    const words = txt.toLowerCase().split(/\s+/);
+    let score = 0;
+    for (const w of words) {
+      const clean = w.replace(/[^a-z]/gi, '');
+      if (DICT_ES.has(clean)) score += clean.length;
+    }
+    return score;
+  }
+
   function renderBrute() {
     const text = document.getElementById('inputText').value;
     const charset = getCharset();
@@ -773,12 +794,14 @@
     container.innerHTML = '';
 
     if (bruteTab === 'atbash') {
-      // Atbash solo tiene un resultado
       const result = atbashCipher(text, charset);
+      const score = scoreText(result);
       const div = document.createElement('div');
       div.className = 'brute-atbash-result';
       div.title = 'Clic para usar este resultado';
-      div.textContent = result;
+      div.innerHTML = escapeHtml(result) + (score > 0
+        ? ` <span style="color:var(--accent);font-size:11px;font-style:normal;">★ ${score} pts</span>`
+        : '');
       div.onclick = () => useResult(result);
       container.appendChild(div);
 
@@ -789,23 +812,41 @@
       return;
     }
 
-    // César: probar todas las claves
+    // César: generar todas las claves con puntaje
     const n = charset.length;
+    const candidates = [];
     for (let k = 1; k < n; k++) {
       const result = cesarCipher(text, charset, k, true);
+      candidates.push({ k, result, score: scoreText(result) });
+    }
+
+    // Ordenar: mayor puntaje primero, empate → menor k primero
+    candidates.sort((a, b) => b.score - a.score || a.k - b.k);
+
+    candidates.forEach(({ k, result, score }, i) => {
       const row = document.createElement('div');
       row.className = 'brute-row';
-      row.style.animationDelay = `${k * 15}ms`;
+      row.style.animationDelay = `${i * 10}ms`;
+
+      const scoreTag = score > 0
+        ? `<span style="font-size:10px;color:var(--accent2);padding:2px 6px;border:1px solid rgba(110,200,169,0.3);border-radius:4px;">★ ${score}</span>`
+        : `<span style="font-size:10px;color:var(--muted);">—</span>`;
+
       row.innerHTML = `
-        <div class="brute-key">${k}</div>
-        <div class="brute-text" title="${escapeHtml(result)}">${escapeHtml(result)}</div>
-        <button class="brute-use-btn" onclick="useResult('${escapeHtml(result).replace(/'/g,"\\'")}')">Usar</button>
+        <div class="brute-key" title="Clave">${k}</div>
+        <div style="display:flex;flex-direction:column;gap:2px;overflow:hidden;">
+          <div class="brute-text" title="${escapeHtml(result)}">${escapeHtml(result)}</div>
+          <div style="display:flex;align-items:center;gap:6px;">${scoreTag}</div>
+        </div>
+        <button class="brute-use-btn" onclick="event.stopPropagation();useResult(${JSON.stringify(result)})">Usar</button>
       `;
+
+      if (score > 0) row.style.borderColor = 'rgba(110,200,169,0.3)';
       row.onclick = (e) => {
         if (!e.target.classList.contains('brute-use-btn')) useResult(result);
       };
       container.appendChild(row);
-    }
+    });
   }
 
   function useResult(text) {
