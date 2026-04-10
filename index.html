@@ -7,616 +7,161 @@
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --border: #2a2a3a;
-    --accent: #c8a96e;
-    --accent2: #6ec8a9;
-    --text: #e8e0d0;
-    --muted: #7a7a8a;
-    --red: #c86e6e;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Courier Prime', monospace;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 40px 20px;
-    background-image: 
-      radial-gradient(ellipse at 20% 20%, rgba(200,169,110,0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(110,200,169,0.05) 0%, transparent 50%);
-  }
-
-  header {
-    text-align: center;
-    margin-bottom: 48px;
-    animation: fadeDown 0.8s ease both;
-  }
-
-  header .eyebrow {
-    font-size: 11px;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 12px;
-  }
-
-  header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    font-weight: 900;
-    line-height: 1.1;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--text) 50%, var(--accent2) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  header p {
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 14px;
-    letter-spacing: 1px;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 860px;
-    animation: fadeUp 0.8s ease 0.2s both;
-  }
-
-  /* ── MÓDULO SELECTOR ── */
-  .module-select {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  .module-btn {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    text-align: left;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .module-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .module-btn.cesar::before { background: linear-gradient(135deg, rgba(200,169,110,0.1), transparent); }
-  .module-btn.atbash::before { background: linear-gradient(135deg, rgba(110,200,169,0.1), transparent); }
-
-  .module-btn:hover::before,
-  .module-btn.active::before { opacity: 1; }
-
-  .module-btn.active.cesar { border-color: var(--accent); }
-  .module-btn.active.atbash { border-color: var(--accent2); }
-
-  .module-btn .tag {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .cesar .tag { color: var(--accent); }
-  .atbash .tag { color: var(--accent2); }
-
-  .module-btn h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    margin-bottom: 6px;
-    color: var(--text);
-  }
-
-  .module-btn p {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-
-  /* ── PANEL ── */
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    margin-bottom: 24px;
-  }
-
-  .panel-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .panel-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-  }
-
-  .badge {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 4px;
-    background: rgba(200,169,110,0.15);
-    color: var(--accent);
-    border: 1px solid rgba(200,169,110,0.3);
-  }
-
-  .badge.atbash-badge {
-    background: rgba(110,200,169,0.15);
-    color: var(--accent2);
-    border-color: rgba(110,200,169,0.3);
-  }
-
-  /* ── CHARSET ── */
-  .charset-section {
-    margin-bottom: 24px;
-  }
-
-  label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  input[type="text"],
-  textarea {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'Courier Prime', monospace;
-    font-size: 14px;
-    padding: 12px 16px;
-    outline: none;
-    transition: border-color 0.2s;
-    resize: vertical;
-  }
-
-  input[type="text"]:focus,
-  textarea:focus {
-    border-color: var(--accent);
-  }
-
-  textarea { min-height: 100px; }
-
-  .charset-hint {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 6px;
-  }
-
-  /* ── DESPLAZAMIENTO ── */
-  .shift-section {
-    margin-bottom: 24px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 16px;
-    align-items: end;
-  }
-
-  .shift-display {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    color: var(--accent);
-    text-align: center;
-    padding: 8px;
-    background: rgba(200,169,110,0.08);
-    border: 1px solid rgba(200,169,110,0.2);
-    border-radius: 6px;
-    min-width: 70px;
-  }
-
-  input[type="range"] {
-    width: 100%;
-    -webkit-appearance: none;
-    height: 4px;
-    background: var(--border);
-    border-radius: 4px;
-    outline: none;
-    margin: 8px 0;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    background: var(--accent);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-
-  input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-  }
-
-  /* ── BOTONES ACCIÓN ── */
-  .action-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
-  .btn {
-    padding: 14px 24px;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Courier Prime', monospace;
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: 700;
-  }
-
-  .btn-cipher {
-    background: var(--accent);
-    color: var(--bg);
-  }
-
-  .btn-cipher:hover { background: #d4b87a; transform: translateY(-1px); }
-
-  .btn-decipher {
-    background: transparent;
-    color: var(--accent);
-    border: 2px solid var(--accent);
-  }
-
-  .btn-decipher:hover { background: rgba(200,169,110,0.1); }
-
-  .btn-clear {
-    grid-column: 1 / -1;
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    font-size: 11px;
-    padding: 10px;
-  }
-
-  .btn-clear:hover { border-color: var(--red); color: var(--red); }
-
-  /* ── RESULTADO ── */
-  .result-section {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-  }
-
-  .result-label {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .copy-btn {
-    background: none;
-    border: none;
-    color: var(--accent);
-    cursor: pointer;
-    font-family: 'Courier Prime', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 8px;
-    border: 1px solid rgba(200,169,110,0.3);
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
-
-  .copy-btn:hover { background: rgba(200,169,110,0.1); }
-
-  .result-text {
-    font-size: 16px;
-    color: var(--accent2);
-    line-height: 1.6;
-    min-height: 48px;
-    word-break: break-all;
-    font-style: italic;
-  }
-
-  /* ── VISUALIZACIÓN ALFABETO ── */
-  .alpha-visual {
-    margin-top: 24px;
-    overflow-x: auto;
-  }
-
-  .alpha-table {
-    display: flex;
-    gap: 2px;
-    min-width: max-content;
-    padding: 4px;
-  }
-
-  .alpha-pair {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .alpha-char {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    border-radius: 4px;
-    font-weight: 700;
-  }
-
-  .alpha-orig {
-    background: rgba(200,169,110,0.15);
-    color: var(--accent);
-    border: 1px solid rgba(200,169,110,0.2);
-  }
-
-  .alpha-enc {
-    background: rgba(110,200,169,0.15);
-    color: var(--accent2);
-    border: 1px solid rgba(110,200,169,0.2);
-  }
-
-  .alpha-arrow {
-    font-size: 8px;
-    color: var(--muted);
-  }
-
-  /* ── INFO CARDS ── */
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 8px;
-  }
-
-  .info-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-
-  .info-card strong {
-    display: block;
-    color: var(--text);
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    margin-bottom: 8px;
-  }
-
-  /* ── ESTADO ACTIVO ── */
-  .status-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes flash {
-    0%, 100% { background: transparent; }
-    50% { background: rgba(110,200,169,0.2); }
-  }
-
-  .flash { animation: flash 0.5s ease; }
-
-  /* ── SEPARATOR ── */
-  .sep { height: 1px; background: var(--border); margin: 24px 0; }
-
-  /* ── FUERZA BRUTA ── */
-  .brute-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    margin-bottom: 24px;
-    display: none;
-  }
-
-  .brute-panel.visible { display: block; }
-
-  .brute-intro {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 20px;
-    line-height: 1.7;
-    padding: 12px 16px;
-    border-left: 3px solid var(--accent);
-    background: rgba(200,169,110,0.05);
-    border-radius: 0 6px 6px 0;
-  }
-
-  .brute-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
-  }
-
-  .brute-tab {
-    padding: 6px 16px;
-    border-radius: 4px;
-    font-family: 'Courier Prime', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    transition: all 0.2s;
-  }
-
-  .brute-tab.active {
-    background: rgba(200,169,110,0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .brute-results {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 420px;
-    overflow-y: auto;
-    padding-right: 4px;
-  }
-
-  .brute-results::-webkit-scrollbar { width: 4px; }
-  .brute-results::-webkit-scrollbar-track { background: var(--bg); }
-  .brute-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-  .brute-row {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg);
-    cursor: pointer;
-    transition: all 0.2s;
-    animation: fadeUp 0.3s ease both;
-  }
-
-  .brute-row:hover { border-color: var(--accent2); background: rgba(110,200,169,0.04); }
-
-  .brute-key {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    color: var(--accent);
-    min-width: 36px;
-    text-align: center;
-  }
-
-  .brute-text {
-    font-size: 13px;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .brute-use-btn {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border: 1px solid var(--accent2);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--accent2);
-    cursor: pointer;
-    font-family: 'Courier Prime', monospace;
-    white-space: nowrap;
-    transition: all 0.2s;
-  }
-
-  .brute-use-btn:hover { background: rgba(110,200,169,0.15); }
-
-  .brute-atbash-result {
-    padding: 16px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 14px;
-    color: var(--accent2);
-    font-style: italic;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-
-  .brute-atbash-result:hover { border-color: var(--accent2); }
-
-  .brute-empty {
-    text-align: center;
-    color: var(--muted);
-    padding: 32px;
-    font-size: 13px;
-  }
-
-  .btn-brute {
-    grid-column: 1 / -1;
-    background: rgba(200,169,110,0.1);
-    color: var(--accent);
-    border: 1px dashed var(--accent);
-    padding: 12px;
-    font-size: 11px;
-  }
-
-  .btn-brute:hover { background: rgba(200,169,110,0.2); }
-
-  @media (max-width: 600px) {
-    .module-select, .action-row, .info-grid { grid-template-columns: 1fr; }
-    .shift-section { grid-template-columns: 1fr; }
-    .btn-clear { grid-column: 1; }
-    .brute-row { grid-template-columns: auto 1fr; }
-    .brute-use-btn { display: none; }
+    --bg:#0a0a0f;--surface:#12121a;--border:#2a2a3a;
+    --accent:#c8a96e;--accent2:#6ec8a9;--text:#e8e0d0;
+    --muted:#7a7a8a;--red:#c86e6e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Courier Prime',monospace;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px;
+    background-image:radial-gradient(ellipse at 20% 20%,rgba(200,169,110,.05) 0%,transparent 50%),
+      radial-gradient(ellipse at 80% 80%,rgba(110,200,169,.05) 0%,transparent 50%);}
+  header{text-align:center;margin-bottom:48px;animation:fadeDown .8s ease both;}
+  header .eyebrow{font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  header h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,4rem);font-weight:900;line-height:1.1;
+    background:linear-gradient(135deg,var(--accent) 0%,var(--text) 50%,var(--accent2) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  header p{margin-top:12px;color:var(--muted);font-size:14px;letter-spacing:1px;}
+  .container{width:100%;max-width:920px;animation:fadeUp .8s ease .2s both;}
+
+  .module-select{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
+  .module-btn{background:var(--surface);border:2px solid var(--border);border-radius:8px;
+    padding:20px;cursor:pointer;transition:all .25s ease;text-align:left;position:relative;overflow:hidden;}
+  .module-btn::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;}
+  .module-btn.cesar::before{background:linear-gradient(135deg,rgba(200,169,110,.1),transparent);}
+  .module-btn.atbash::before{background:linear-gradient(135deg,rgba(110,200,169,.1),transparent);}
+  .module-btn:hover::before,.module-btn.active::before{opacity:1;}
+  .module-btn.active.cesar{border-color:var(--accent);}
+  .module-btn.active.atbash{border-color:var(--accent2);}
+  .module-btn .tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;}
+  .cesar .tag{color:var(--accent);}.atbash .tag{color:var(--accent2);}
+  .module-btn h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:6px;color:var(--text);}
+  .module-btn p{font-size:12px;color:var(--muted);line-height:1.6;}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;margin-bottom:24px;}
+  .panel-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+  .panel-title{font-family:'Playfair Display',serif;font-size:1.1rem;}
+  .badge{font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:4px 10px;border-radius:4px;
+    background:rgba(200,169,110,.15);color:var(--accent);border:1px solid rgba(200,169,110,.3);}
+  .badge.atbash-badge{background:rgba(110,200,169,.15);color:var(--accent2);border-color:rgba(110,200,169,.3);}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+
+  label{display:block;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  input[type="text"],textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;
+    color:var(--text);font-family:'Courier Prime',monospace;font-size:14px;padding:12px 16px;
+    outline:none;transition:border-color .2s;resize:vertical;}
+  input[type="text"]:focus,textarea:focus{border-color:var(--accent);}
+  textarea{min-height:100px;}
+
+  /* Charset */
+  .charset-section{margin-bottom:20px;}
+  .charset-preview{display:flex;flex-wrap:wrap;gap:3px;margin-top:10px;max-height:90px;overflow-y:auto;
+    padding:6px;background:var(--bg);border:1px solid var(--border);border-radius:6px;}
+  .charset-preview::-webkit-scrollbar{width:3px;}
+  .charset-preview::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+  .cp-char{display:inline-flex;flex-direction:column;align-items:center;padding:2px 4px;
+    border-radius:3px;background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.15);
+    min-width:28px;cursor:default;}
+  .cp-char:hover{background:rgba(200,169,110,.2);}
+  .cp-sym{font-size:13px;color:var(--accent);line-height:1.2;}
+  .cp-code{font-size:8px;color:var(--muted);line-height:1;}
+
+  .ascii-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:flex-end;}
+  .ascii-row>div{flex:1;min-width:180px;}
+  .ascii-presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center;}
+  .preset-btn{font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:1px;
+    padding:4px 10px;border-radius:4px;cursor:pointer;transition:all .2s;
+    background:rgba(110,200,169,.08);color:var(--accent2);border:1px solid rgba(110,200,169,.25);}
+  .preset-btn:hover{background:rgba(110,200,169,.2);}
+  .charset-info{font-size:11px;color:var(--muted);margin-top:6px;transition:color .3s;}
+
+  /* Shift */
+  .shift-section{margin-bottom:24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end;}
+  .shift-display{font-family:'Playfair Display',serif;font-size:2rem;color:var(--accent);text-align:center;
+    padding:8px;background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.2);border-radius:6px;min-width:70px;}
+  input[type="range"]{width:100%;-webkit-appearance:none;height:4px;background:var(--border);border-radius:4px;outline:none;margin:8px 0;}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;transition:transform .2s;}
+  input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+
+  /* Buttons */
+  .action-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+  .btn{padding:14px 24px;border:none;border-radius:6px;font-family:'Courier Prime',monospace;font-size:13px;
+    letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;font-weight:700;}
+  .btn-cipher{background:var(--accent);color:var(--bg);}
+  .btn-cipher:hover{background:#d4b87a;transform:translateY(-1px);}
+  .btn-decipher{background:transparent;color:var(--accent);border:2px solid var(--accent);}
+  .btn-decipher:hover{background:rgba(200,169,110,.1);}
+  .btn-clear{grid-column:1/-1;background:transparent;color:var(--muted);border:1px solid var(--border);font-size:11px;padding:10px;}
+  .btn-clear:hover{border-color:var(--red);color:var(--red);}
+  .btn-brute{grid-column:1/-1;background:rgba(200,169,110,.1);color:var(--accent);border:1px dashed var(--accent);padding:12px;font-size:11px;}
+  .btn-brute:hover{background:rgba(200,169,110,.2);}
+
+  /* Result */
+  .result-section{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:20px;}
+  .result-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);
+    margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+  .copy-btn{background:none;color:var(--accent);cursor:pointer;font-family:'Courier Prime',monospace;
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:4px 8px;
+    border:1px solid rgba(200,169,110,.3);border-radius:4px;transition:all .2s;}
+  .copy-btn:hover{background:rgba(200,169,110,.1);}
+  .result-text{font-size:16px;color:var(--accent2);line-height:1.6;min-height:48px;word-break:break-all;font-style:italic;}
+
+  /* Brute */
+  .brute-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;margin-bottom:24px;display:none;}
+  .brute-panel.visible{display:block;}
+  .brute-intro{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7;padding:12px 16px;
+    border-left:3px solid var(--accent);background:rgba(200,169,110,.05);border-radius:0 6px 6px 0;}
+  .brute-tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px;}
+  .brute-tab{padding:6px 16px;border-radius:4px;font-family:'Courier Prime',monospace;font-size:11px;
+    letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);
+    background:transparent;color:var(--muted);transition:all .2s;}
+  .brute-tab.active{background:rgba(200,169,110,.15);border-color:var(--accent);color:var(--accent);}
+  .brute-results{display:flex;flex-direction:column;gap:8px;max-height:460px;overflow-y:auto;padding-right:4px;}
+  .brute-results::-webkit-scrollbar{width:4px;}
+  .brute-results::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+  .brute-row{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;
+    padding:10px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);
+    cursor:pointer;transition:all .2s;animation:fadeUp .3s ease both;}
+  .brute-row:hover{border-color:var(--accent2);background:rgba(110,200,169,.04);}
+  .brute-key{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--accent);text-align:center;}
+  .brute-text{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .brute-use-btn{font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;
+    border:1px solid var(--accent2);border-radius:4px;background:transparent;color:var(--accent2);
+    cursor:pointer;font-family:'Courier Prime',monospace;white-space:nowrap;transition:all .2s;}
+  .brute-use-btn:hover{background:rgba(110,200,169,.15);}
+  .brute-atbash-result{padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:6px;
+    font-size:14px;color:var(--accent2);font-style:italic;cursor:pointer;
+    transition:border-color .2s;word-break:break-all;}
+  .brute-atbash-result:hover{border-color:var(--accent2);}
+
+  /* Alpha table */
+  .alpha-visual{margin-top:16px;overflow-x:auto;}
+  .alpha-table{display:flex;gap:2px;min-width:max-content;padding:4px;}
+  .alpha-pair{display:flex;flex-direction:column;align-items:center;gap:3px;}
+  .alpha-char{width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;border-radius:4px;font-weight:700;}
+  .alpha-orig{background:rgba(200,169,110,.15);color:var(--accent);border:1px solid rgba(200,169,110,.2);}
+  .alpha-enc{background:rgba(110,200,169,.15);color:var(--accent2);border:1px solid rgba(110,200,169,.2);}
+  .alpha-arrow{font-size:8px;color:var(--muted);}
+
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+  .info-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+    padding:20px;font-size:13px;line-height:1.7;color:var(--muted);}
+  .info-card strong{display:block;color:var(--text);font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:8px;}
+  .sep{height:1px;background:var(--border);margin:24px 0;}
+
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes flash{0%,100%{background:transparent}50%{background:rgba(110,200,169,.2)}}
+  .flash{animation:flash .5s ease;}
+
+  @media(max-width:600px){
+    .module-select,.action-row,.info-grid{grid-template-columns:1fr;}
+    .shift-section{grid-template-columns:1fr;}
+    .btn-clear{grid-column:1;}
+    .brute-row{grid-template-columns:36px 1fr;}
+    .brute-use-btn{display:none;}
   }
 </style>
 </head>
@@ -625,26 +170,22 @@
 <header>
   <div class="eyebrow">Sistema de Criptografía Clásica</div>
   <h1>CryptoClásico</h1>
-  <p>Cifrado César &amp; Atbash · Basado en ASCII</p>
+  <p>Cifrado César &amp; Atbash · Unicode &amp; ASCII extendido</p>
 </header>
 
 <div class="container">
 
-  <!-- Selección de módulo -->
   <div class="module-select">
     <button class="module-btn cesar active" onclick="selectModule('cesar')">
-      <div class="tag">Módulo I</div>
-      <h3>Cifrado César</h3>
-      <p>Desplaza cada carácter N posiciones en el conjunto de caracteres definido.</p>
+      <div class="tag">Módulo I</div><h3>Cifrado César</h3>
+      <p>Desplaza cada carácter N posiciones en el charset definido.</p>
     </button>
     <button class="module-btn atbash" onclick="selectModule('atbash')">
-      <div class="tag">Módulo II</div>
-      <h3>Cifrado Atbash</h3>
-      <p>Invierte el conjunto de caracteres: el primero ↔ último, segundo ↔ penúltimo…</p>
+      <div class="tag">Módulo II</div><h3>Cifrado Atbash</h3>
+      <p>Invierte el charset: el primero ↔ último, segundo ↔ penúltimo…</p>
     </button>
   </div>
 
-  <!-- Panel principal -->
   <div class="panel">
     <div class="panel-header">
       <div class="status-dot"></div>
@@ -652,14 +193,48 @@
       <span class="badge" id="moduleBadge">CÉSAR</span>
     </div>
 
-    <!-- Conjunto de caracteres -->
+    <!-- Charset -->
     <div class="charset-section">
       <label>Conjunto de Caracteres (Charset)</label>
-      <input type="text" id="charset" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,;:!?-_@#" />
-      <div class="charset-hint">Puedes modificar los caracteres usados para el cifrado. El orden importa.</div>
+      <textarea id="charset" rows="2"
+        style="min-height:60px;font-size:13px;word-break:break-all;"
+        oninput="onCharsetChange()">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,;:!?-_@#</textarea>
+
+      <div class="charset-preview" id="charsetPreview"></div>
+      <div class="charset-info" id="charsetInfo">71 caracteres · 70 claves posibles en César</div>
+
+      <!-- Agregar por ASCII/Unicode -->
+      <div class="ascii-row">
+        <div>
+          <label style="margin-bottom:4px;">Agregar por código ASCII / Unicode</label>
+          <input type="text" id="asciiInput" placeholder="65,241  ó  32-126  ó  U+00F1" />
+        </div>
+        <button class="btn" onclick="addFromAscii()"
+          style="background:rgba(110,200,169,.15);color:var(--accent2);border:1px solid rgba(110,200,169,.4);padding:10px 18px;font-size:12px;letter-spacing:1px;">
+          + Agregar
+        </button>
+        <button class="btn" onclick="document.getElementById('charset').value='';onCharsetChange()"
+          style="background:transparent;color:var(--muted);border:1px solid var(--border);padding:10px 14px;font-size:11px;">
+          Vaciar
+        </button>
+      </div>
+
+      <!-- Presets -->
+      <div class="ascii-presets">
+        <span style="font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">Presets:</span>
+        <button class="preset-btn" onclick="applyPreset('az')">a–z</button>
+        <button class="preset-btn" onclick="applyPreset('AZ')">A–Z</button>
+        <button class="preset-btn" onclick="applyPreset('09')">0–9</button>
+        <button class="preset-btn" onclick="applyPreset('ascii')">ASCII 32–126</button>
+        <button class="preset-btn" onclick="applyPreset('ascii_ext')">ASCII 32–255</button>
+        <button class="preset-btn" onclick="applyPreset('exam')"
+          style="background:rgba(200,169,110,.15);color:var(--accent);border-color:rgba(200,169,110,.4);">
+          ★ Charset Examen
+        </button>
+      </div>
     </div>
 
-    <!-- Desplazamiento (solo César) -->
+    <!-- Shift -->
     <div id="shiftSection" class="shift-section">
       <div>
         <label>Desplazamiento (Clave César)</label>
@@ -668,7 +243,6 @@
       <div class="shift-display" id="shiftVal">3</div>
     </div>
 
-    <!-- Texto de entrada -->
     <div>
       <label>Texto de Entrada</label>
       <textarea id="inputText" placeholder="Escribe aquí el mensaje a cifrar o descifrar..."></textarea>
@@ -676,15 +250,13 @@
 
     <div class="sep"></div>
 
-    <!-- Botones -->
     <div class="action-row">
-      <button class="btn btn-cipher" onclick="process('cipher')">⬆ Cifrar</button>
+      <button class="btn btn-cipher"   onclick="process('cipher')">⬆ Cifrar</button>
       <button class="btn btn-decipher" onclick="process('decipher')">⬇ Descifrar</button>
-      <button class="btn btn-brute" onclick="toggleBrute()">🔍 Descifrar por Fuerza Bruta (todas las claves)</button>
-      <button class="btn btn-clear" onclick="clearAll()">✕ Limpiar todo</button>
+      <button class="btn btn-brute"    onclick="toggleBrute()">🔍 Fuerza Bruta — todas las claves</button>
+      <button class="btn btn-clear"    onclick="clearAll()">✕ Limpiar todo</button>
     </div>
 
-    <!-- Resultado -->
     <div class="result-section" id="resultSection">
       <div class="result-label">
         <span id="resultLabel">Resultado</span>
@@ -694,328 +266,376 @@
     </div>
   </div>
 
-  <!-- Panel fuerza bruta -->
+  <!-- Fuerza bruta -->
   <div class="brute-panel" id="brutePanel">
     <div class="panel-header">
       <span class="panel-title">🔍 Fuerza Bruta — Todas las claves posibles</span>
     </div>
     <div class="brute-intro">
-      Se muestran <strong>todas las combinaciones posibles</strong> de descifrado. Esto demuestra por qué César y Atbash son inseguros: un atacante solo necesita revisar esta lista para encontrar el mensaje original sin conocer la clave. Haz clic en <strong>Usar</strong> para seleccionar el resultado correcto.
+      Resultados ordenados por <strong>congruencia con el español</strong> (★ puntos). Los más probables aparecen primero. Haz clic en <strong>Usar</strong> para seleccionar el resultado.
     </div>
     <div class="brute-tabs">
-      <button class="brute-tab active" onclick="showBruteTab('cesar')" id="tabCesar">César (todas las claves)</button>
-      <button class="brute-tab" onclick="showBruteTab('atbash')" id="tabAtbash">Atbash (resultado único)</button>
+      <button class="brute-tab active" onclick="showBruteTab('cesar')"  id="tabCesar">César (todas las claves)</button>
+      <button class="brute-tab"        onclick="showBruteTab('atbash')" id="tabAtbash">Atbash (resultado único)</button>
     </div>
     <div class="brute-results" id="bruteResults"></div>
   </div>
 
-  <!-- Visualización del mapeo -->
+  <!-- Tabla sustitución -->
   <div class="panel">
     <div class="panel-header">
       <span class="panel-title">Tabla de Sustitución</span>
     </div>
-    <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
       <span style="color:var(--accent)">■</span> Original &nbsp;→&nbsp;
-      <span style="color:var(--accent2)">■</span> Cifrado
+      <span style="color:var(--accent2)">■</span> Cifrado &nbsp;·&nbsp;
+      <span style="font-size:11px;">Pasa el cursor para ver código Unicode</span>
     </div>
-    <div class="alpha-visual">
-      <div class="alpha-table" id="alphaTable"></div>
-    </div>
-  </div>
+    <div class="alpha-visual"><div class="alpha-table" id="alphaTable"></div></div>
   </div>
 
+  <div class="info-grid">
+    <div class="info-card">
+      <strong>César (100 a.C.)</strong>
+      Desplaza cada carácter N posiciones en el charset. Con N caracteres hay N−1 claves posibles. Vulnerable al análisis de frecuencias descrito por Al-Kindi (siglo IX).
+    </div>
+    <div class="info-card">
+      <strong>Atbash (~600 a.C.)</strong>
+      Invierte el charset: posición i → (n−1−i). Sin clave variable, es su propio inverso. El criptoanálisis es trivial.
+    </div>
+  </div>
 </div>
 
 <script>
-  // ─── ESTADO ───
-  let currentModule = 'cesar';
-  let bruteVisible = false;
-  let bruteTab = 'cesar';
+// ── Estado ──────────────────────────────────────────
+let currentModule = 'cesar';
+let bruteVisible  = false;
+let bruteTab      = 'cesar';
 
-  // ─── FUERZA BRUTA ───
-  function toggleBrute() {
-    const text = document.getElementById('inputText').value;
-    if (!text.trim()) {
-      alert('Ingresa un texto cifrado primero.');
-      return;
-    }
-    bruteVisible = !bruteVisible;
-    const panel = document.getElementById('brutePanel');
-    panel.classList.toggle('visible', bruteVisible);
-    if (bruteVisible) {
-      renderBrute();
-      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+// Charset del examen
+const EXAM_CHARSET = '\u24BE\u0072\u2058\u0074\u24B2\u0078\u271C\u0057\u2496\u00F1\u2496\u00F9\uF0A5\u00C9\u221B\u0052\u267B\u0064\u267D\u00E1\u21AA\u0069\u2046\u00E9\u22CF\u004A\u24E4\u00D3\u235F\u00DC\u0032\u0068\u238C\u0070\u2765\u00DA\u225A\u0061\u2338\u0050\u2242\u0062\u2465\u0071\u203F\u0041\u265C\u006D\u2307\u0043\u23FE\u0051\u2735\u00ED\u2052\u0075\u25DE\u006A\u23E6\u0065\u20AC\u004C\u24A2\u004B\u2266\u006C\u25CD\u00CD\u27A0\u0048\u225B\u0066\u2344\u0049\u23FF\u0058\u274F\u0054\u265A\u006E\u23CD\u0063\u2745\u0055\u22D9\u0045\u262A\u0044\u2730\u0053\u2190\u005A\u00BD\u004F\u266C\u00F3\u249F\u004D\u22E8\u0042\u2476\u0046\u252F\u0079\u2739\u0076\u26A5\u006B\u2350\u00FC\u2461\u0056\u261B\u0047\u246F\u007A\u00B3\u004E\u22BA\u0059\u2532\u0073\u24BF\u0077\u2579\u006F\u22C6\u0067\u258E\u00D1\u21BD\u00C1\u246C\u2294\u2565\u220D\u237A\u21BE\u2337\u22BD\u23DC\u2355\u23F3\u2507\u2569\u23FC\u0037\u21A2\u233B\u2316\u2568\u249A\u21FF\u231F\u22DD\u238E\u264F\u22CD\u22E3\u22EC\u24E7\u21CD\u273F\u2696\u2399\u22CC\u24DC\u2044\u00A1\u2260\u26D6\u00B8\u26C3\u25AC\u005E\u26C7\u2771\u232D\u2724\u23C8\u2770\u21AB\u00BC\u274D\u26F1\u260C\u2044\u2534\u27B6\u2795\u27BB\u2654\u2748\u2048\u20B9\u2373\u25AF\u2236\u2372\u27A6\u23D9\u2492\u2511\u2608\u224F\u2361\u260A\u20AA\u2508\u26E8\u222A\u25D1\u24E1\u2736\u24F2\u227B\u2509\u25CB\u219A\u00BE\u26AA\u21DE\u003B\u22FF\u25FB\u2504\u256F\u2013\u2676\u2228\u20B3\u00B9\u2369\u26E2\u24B1\u21D1\u00BF\u24C2\u23BC\u2750\u2751\u2566\u20BD\u2623\u227A\u27AA\u2037\u260E\u22D5\u2558\u2598\u2244\u262D\u24E3\u007C\u26B2\u235E\u2626\u2070\u2444\u224C\u2344\u26A6\u207E\u25C2\u26E6\u231E\u24C1\u21B0\u2704\u23E8\u2256\u267C\u2772\u00D7\u2311\u23E7\u26DB\u2572\u2270\u2372\u0020\u2667\u21AC\u24EE\u262E\u2200\u2713\u2463\u204E\u21CC\u2348\u26A7\u2198\u26F4\u2665\u26F3\u257C\u2562\u24AC\u2032\u239E\u0031\u21B7\u26BD\u26CF\u25AA\u23CC\u261E\u23F5\u00A7\u25C3\u258D\u21C7\u221D\u27B9\u22E6\u2477\u21CB\u2347\u2756\u21A3\u2759\u2401\u255D\u249B\u2643\u2646\u260A\u276B\u0060\u2777\u21D9\u26EA\u23D6\u25CF\u27A7\u0023\u2747\u2533\u2649\u24C0\u2629\u2503\u25B0\u25C2\u24DA\u23E9\u2679\u26D1\u2227\u25B7\u22F1\u24F8\u259C\u237C\u227D\u2653\u223D\u2257\u27B3\u26B1\u26B6\u20BE\u22A3\u260C\u250A\u262C\u2750\u21CA\u2583\u21F5\u260B\u2353\u207D\u2639\u24FD\u222D\u22F0\u24E1\u275A\u24F0\u22E5\u27C1\u22EE\u24DE\u26CD\u2705\u235C\u26FF\u2775\u2663\u2542\u2320\u24C8\u2359\u2465\u270C\u2297\u23D3\u21E3\u21D5\u2478\u24D8\u23BB\u21F2\u23EA\u2743\u258F\u21E8\u2191\u2479\u0034\u272F\u21EF\u2340\u2746\u23B5\u2764\u22F5\u2330\u24DF\u27C9\u2494\u257F\u22DB\u2193\u0030\u23DB\u263D\u251C\u2237\u23E3\u271B\u2479\u27A4\u20AE\u26C0\u264A\u2660\u26A9\u2285\u260D\u2757\u24DD\u22D3\u2022\u25A1\u2638\u257F\u25FD\u223A\u2402\u261D\u237D\u00BB\u0036\u252B\u2517\u2204\u2208\u2019\u21B4\u2312\u2385\u2284\u2349\u226F\u21D8\u24C5\u26D8\u2687\u27B8\u21F0\u228F\u2324\u24FF\u22FB\u24EB\u22B6\u207C\u2381\u26A6\u26C1\u264B\u265B\u267A\u27B7\u2652\u2371\u2374\u27B3\u26B1\u26B6\u20BE\u22C5\u267E\u2772\u00D7\u2311\u23E7\u26DB\u231E\u24C1';
+
+// ── Helpers Unicode ──────────────────────────────────
+function toChars(str) { return [...str]; }
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function cpHex(ch) {
+  return 'U+' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4,'0');
+}
+
+// ── Cifrado ──────────────────────────────────────────
+function getCharset() { return document.getElementById('charset').value; }
+
+function cesarCipher(text, charset, shift, decrypt) {
+  const chars = toChars(charset);
+  const n = chars.length;
+  const d = decrypt ? -shift : shift;
+  return toChars(text).map(ch => {
+    const idx = chars.indexOf(ch);
+    if (idx === -1) return ch;
+    return chars[((idx + d) % n + n) % n];
+  }).join('');
+}
+
+function atbashCipher(text, charset) {
+  const chars = toChars(charset);
+  const n = chars.length;
+  return toChars(text).map(ch => {
+    const idx = chars.indexOf(ch);
+    if (idx === -1) return ch;
+    return chars[n - 1 - idx];
+  }).join('');
+}
+
+// ── Diccionario ──────────────────────────────────────
+const DICT_ES = new Set([
+  'el','la','los','las','un','una','unos','unas','lo',
+  'yo','tu','ella','nosotros','ellos','ellas','me','te','se','nos','le','les',
+  'mi','mis','tus','su','sus',
+  'de','del','al','en','con','por','para','sin','sobre','entre','hasta',
+  'desde','hacia','ante','bajo','tras','y','o','u','e','pero','sino',
+  'que','si','como','cuando','donde','aunque','porque','pues','ni',
+  'es','son','era','fue','ser','estar','tiene','tienen','hay',
+  'hace','hacer','puede','pueden','debe','deben','dice','sabe','quiere',
+  'va','van','da','dan','ver','ir','asi','sido','tenido','hecho',
+  'no','mas','muy','bien','mal','todo','todos','nada','algo','alguien',
+  'aqui','alli','hoy','ayer','ya','aun','solo','siempre','nunca','antes',
+  'este','esta','estos','estas','ese','esa','esos','esas',
+  'cual','quien','cuanto','tanto','tan','cada','otro','otra','mismo','misma',
+  'casa','tiempo','dia','vida','manera','forma','parte','lugar','punto',
+  'mundo','hombre','mujer','persona','gente','vez','ano','trabajo','cosa',
+  'agua','ciudad','pais','nombre','mano','hecho','caso','modo',
+  'nuevo','nueva','gran','grande','primer','primera','ultimo','ultima',
+]);
+
+function scoreText(txt) {
+  const words = txt.toLowerCase().split(/\s+/);
+  let score = 0;
+  for (const w of words) {
+    const clean = w.replace(/[^a-z]/gi,'');
+    if (DICT_ES.has(clean)) score += clean.length;
   }
+  return score;
+}
 
-  function showBruteTab(tab) {
-    bruteTab = tab;
-    document.getElementById('tabCesar').classList.toggle('active', tab === 'cesar');
-    document.getElementById('tabAtbash').classList.toggle('active', tab === 'atbash');
-    renderBrute();
-  }
-
-  // ─── DICCIONARIO ESPAÑOL ───
-  const DICT_ES = new Set([
-    'el','la','los','las','un','una','unos','unas','lo',
-    'yo','tu','el','ella','nosotros','ellos','ellas','me','te','se','nos',
-    'mi','mis','tus','su','sus','le','les',
-    'de','del','al','en','con','por','para','sin','sobre','entre','hasta',
-    'desde','hacia','ante','bajo','tras','y','o','u','e','pero','sino',
-    'que','si','como','cuando','donde','aunque','porque','pues','ni',
-    'es','son','era','fue','ser','estar','tiene','tienen','hay','haber',
-    'hace','hacer','puede','pueden','debe','deben','dice','sabe','quiere',
-    'va','van','da','dan','ver','ir','asi','sido','tenido','hecho',
-    'no','mas','muy','bien','mal','todo','todos','nada','algo','alguien',
-    'aqui','alli','hoy','ayer','ya','aun','solo','siempre','nunca','antes',
-    'este','esta','estos','estas','ese','esa','esos','esas','aquel',
-    'cual','quien','cuanto','tanto','tan','cada','otro','otra','mismo','misma',
-    'casa','tiempo','dia','vida','manera','forma','parte','lugar','punto',
-    'mundo','hombre','mujer','persona','gente','vez','ano','trabajo','cosa',
-    'agua','ciudad','pais','nombre','mano','hecho','caso','vez','modo',
-    'nuevo','nueva','gran','grande','primer','primera','ultimo','ultima',
-    'dos','tres','uno','primera','segundo','tercero',
-  ]);
-
-  function scoreText(txt) {
-    const words = txt.toLowerCase().split(/\s+/);
-    let score = 0;
-    for (const w of words) {
-      const clean = w.replace(/[^a-z]/gi, '');
-      if (DICT_ES.has(clean)) score += clean.length;
-    }
-    return score;
-  }
-
-  function renderBrute() {
-    const text = document.getElementById('inputText').value;
-    const charset = getCharset();
-    const container = document.getElementById('bruteResults');
-    container.innerHTML = '';
-
-    if (bruteTab === 'atbash') {
-      const result = atbashCipher(text, charset);
-      const score = scoreText(result);
-      const div = document.createElement('div');
-      div.className = 'brute-atbash-result';
-      div.title = 'Clic para usar este resultado';
-      div.innerHTML = escapeHtml(result) + (score > 0
-        ? ` <span style="color:var(--accent);font-size:11px;font-style:normal;">★ ${score} pts</span>`
-        : '');
-      div.onclick = () => useResult(result);
-      container.appendChild(div);
-
-      const hint = document.createElement('div');
-      hint.style.cssText = 'font-size:11px;color:var(--muted);margin-top:10px;text-align:center;';
-      hint.textContent = 'Atbash no tiene clave variable — solo existe un resultado posible. Haz clic para usarlo.';
-      container.appendChild(hint);
-      return;
-    }
-
-    // César: generar todas las claves con puntaje
-    const n = charset.length;
-    const candidates = [];
-    for (let k = 1; k < n; k++) {
-      const result = cesarCipher(text, charset, k, true);
-      candidates.push({ k, result, score: scoreText(result) });
-    }
-
-    // Ordenar: mayor puntaje primero, empate → menor k primero
-    candidates.sort((a, b) => b.score - a.score || a.k - b.k);
-
-    candidates.forEach(({ k, result, score }, i) => {
-      const row = document.createElement('div');
-      row.className = 'brute-row';
-      row.style.animationDelay = `${i * 10}ms`;
-
-      const scoreTag = score > 0
-        ? `<span style="font-size:10px;color:var(--accent2);padding:2px 6px;border:1px solid rgba(110,200,169,0.3);border-radius:4px;">★ ${score}</span>`
-        : `<span style="font-size:10px;color:var(--muted);">—</span>`;
-
-      row.innerHTML = `
-        <div class="brute-key" title="Clave">${k}</div>
-        <div style="display:flex;flex-direction:column;gap:2px;overflow:hidden;">
-          <div class="brute-text" title="${escapeHtml(result)}">${escapeHtml(result)}</div>
-          <div style="display:flex;align-items:center;gap:6px;">${scoreTag}</div>
-        </div>
-        <button class="brute-use-btn" onclick="event.stopPropagation();useResult(${JSON.stringify(result)})">Usar</button>
-      `;
-
-      if (score > 0) row.style.borderColor = 'rgba(110,200,169,0.3)';
-      row.onclick = (e) => {
-        if (!e.target.classList.contains('brute-use-btn')) useResult(result);
-      };
-      container.appendChild(row);
-    });
-  }
-
-  function useResult(text) {
-    document.getElementById('resultText').textContent = text;
-    document.getElementById('resultLabel').textContent = '🔓 Texto Descifrado (seleccionado)';
-    document.getElementById('resultText').classList.remove('flash');
-    void document.getElementById('resultText').offsetWidth;
-    document.getElementById('resultText').classList.add('flash');
-    document.querySelector('.result-section').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  // ─── MÓDULO ───
-  function selectModule(mod) {
-    currentModule = mod;
-    document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.module-btn.${mod}`).classList.add('active');
-
-    const isCesar = mod === 'cesar';
-    document.getElementById('shiftSection').style.display = isCesar ? 'grid' : 'none';
-    document.getElementById('panelTitle').textContent = isCesar ? 'Módulo César' : 'Módulo Atbash';
-    
-    const badge = document.getElementById('moduleBadge');
-    badge.textContent = isCesar ? 'CÉSAR' : 'ATBASH';
-    badge.className = isCesar ? 'badge' : 'badge atbash-badge';
-
-    renderAlphaTable();
-  }
-
-  // ─── DESPLAZAMIENTO ───
-  function updateShift() {
-    const val = document.getElementById('shiftRange').value;
-    document.getElementById('shiftVal').textContent = val;
-    renderAlphaTable();
-  }
-
-  function updateShiftMax() {
-    const n = getCharset().length;
-    const range = document.getElementById('shiftRange');
-    const max = Math.max(1, n - 1);
-    range.max = max;
-    if (parseInt(range.value) > max) range.value = max;
-    document.getElementById('shiftVal').textContent = range.value;
-  }
-
-  // ─── LÓGICA CENTRAL ───
-  function getCharset() {
-    return document.getElementById('charset').value;
-  }
-
-  function cesarCipher(text, charset, shift, decrypt) {
-    const n = charset.length;
-    const d = decrypt ? -shift : shift;
-    return text.split('').map(ch => {
-      const idx = charset.indexOf(ch);
-      if (idx === -1) return ch; // carácter no en charset → pasa sin cambio
-      return charset[((idx + d) % n + n) % n];
-    }).join('');
-  }
-
-  function atbashCipher(text, charset) {
-    const n = charset.length;
-    return text.split('').map(ch => {
-      const idx = charset.indexOf(ch);
-      if (idx === -1) return ch;
-      return charset[n - 1 - idx];
-    }).join('');
-  }
-
-  // ─── PROCESO ───
-  function process(mode) {
-    const text = document.getElementById('inputText').value;
-    const charset = getCharset();
-    const shift = parseInt(document.getElementById('shiftRange').value);
-
-    if (!text.trim()) {
-      showResult('⚠ Ingresa un texto primero.', mode);
-      return;
-    }
-
-    let result;
-    if (currentModule === 'cesar') {
-      result = cesarCipher(text, charset, shift, mode === 'decipher');
-    } else {
-      // Atbash es su propio inverso
-      result = atbashCipher(text, charset);
-    }
-
-    showResult(result, mode);
-    renderAlphaTable();
-  }
-
-  function showResult(text, mode) {
-    const label = mode === 'cipher' ? '🔒 Texto Cifrado' : '🔓 Texto Descifrado';
-    document.getElementById('resultLabel').textContent = label;
-    const el = document.getElementById('resultText');
-    el.textContent = text;
-    el.classList.remove('flash');
-    void el.offsetWidth; // reflow
-    el.classList.add('flash');
-  }
-
-  // ─── COPIAR ───
-  function copyResult() {
-    const text = document.getElementById('resultText').textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.querySelector('.copy-btn');
-      btn.textContent = '✓ Copiado';
-      setTimeout(() => btn.textContent = 'Copiar', 1500);
-    });
-  }
-
-  // ─── LIMPIAR ───
-  function clearAll() {
-    document.getElementById('inputText').value = '';
-    document.getElementById('resultText').textContent = 'El resultado aparecerá aquí...';
-    document.getElementById('resultLabel').textContent = 'Resultado';
-    bruteVisible = false;
-    document.getElementById('brutePanel').classList.remove('visible');
-  }
-
-  // ─── TABLA DE SUSTITUCIÓN ───
-  function renderAlphaTable() {
-    const charset = getCharset();
-    const shift = parseInt(document.getElementById('shiftRange').value);
-    const table = document.getElementById('alphaTable');
-    table.innerHTML = '';
-
-    // Mostrar solo los primeros 40 para no saturar la UI
-    const display = charset.slice(0, 40);
-
-    display.split('').forEach(ch => {
-      let enc;
-      if (currentModule === 'cesar') {
-        enc = cesarCipher(ch, charset, shift, false);
-      } else {
-        enc = atbashCipher(ch, charset);
-      }
-
-      const pair = document.createElement('div');
-      pair.className = 'alpha-pair';
-      pair.innerHTML = `
-        <div class="alpha-char alpha-orig" title="ASCII: ${ch.charCodeAt(0)}">${ch === ' ' ? '·' : escapeHtml(ch)}</div>
-        <div class="alpha-arrow">↓</div>
-        <div class="alpha-char alpha-enc" title="ASCII: ${enc.charCodeAt(0)}">${enc === ' ' ? '·' : escapeHtml(enc)}</div>
-      `;
-      table.appendChild(pair);
-    });
-
-    if (charset.length > 40) {
-      const more = document.createElement('div');
-      more.style.cssText = 'display:flex;align-items:center;color:var(--muted);font-size:11px;padding:0 8px;';
-      more.textContent = `+${charset.length - 40} más`;
-      table.appendChild(more);
-    }
-  }
-
-  function escapeHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  // ─── INIT ───
+// ── Charset UI ───────────────────────────────────────
+function onCharsetChange() {
   updateShiftMax();
+  renderCharsetPreview();
   renderAlphaTable();
+  if (bruteVisible) renderBrute();
+}
 
-  // Actualizar tabla y slider al cambiar charset
-  document.getElementById('charset').addEventListener('input', () => {
-    updateShiftMax();
-    renderAlphaTable();
+function renderCharsetPreview() {
+  const chars = toChars(getCharset());
+  const n = chars.length;
+  document.getElementById('charsetInfo').textContent =
+    `${n} carácter${n!==1?'es':''} · ${Math.max(0,n-1)} clave${n-1!==1?'s':''} posible${n-1!==1?'s':''} en César`;
+
+  const preview = document.getElementById('charsetPreview');
+  preview.innerHTML = '';
+  chars.forEach(ch => {
+    const el = document.createElement('div');
+    el.className = 'cp-char';
+    el.title = `${cpHex(ch)} (${ch.codePointAt(0)})`;
+    el.innerHTML = `<span class="cp-sym">${ch===' '?'·':escapeHtml(ch)}</span>`+
+                   `<span class="cp-code">${cpHex(ch)}</span>`;
+    preview.appendChild(el);
   });
+}
+
+function addFromAscii() {
+  const raw = document.getElementById('asciiInput').value.trim();
+  if (!raw) return;
+  const existing = new Set(toChars(getCharset()));
+  let newChars = getCharset();
+  let added = 0;
+
+  const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+  for (const part of parts) {
+    // U+XXXX
+    if (/^u\+?[0-9a-f]+$/i.test(part)) {
+      const cp = parseInt(part.replace(/^u\+?/i,''), 16);
+      if (!isNaN(cp)) { const ch = String.fromCodePoint(cp); if (!existing.has(ch)){newChars+=ch;existing.add(ch);added++;} }
+      continue;
+    }
+    // rango 32-126
+    const range = part.match(/^(\d+)\s*[-–]\s*(\d+)$/);
+    if (range) {
+      const from = parseInt(range[1]), to = parseInt(range[2]);
+      for (let i=Math.min(from,to); i<=Math.max(from,to); i++) {
+        const ch = String.fromCodePoint(i);
+        if (!existing.has(ch)){newChars+=ch;existing.add(ch);added++;}
+      }
+      continue;
+    }
+    // número suelto
+    const n = parseInt(part);
+    if (!isNaN(n)) { const ch = String.fromCodePoint(n); if (!existing.has(ch)){newChars+=ch;existing.add(ch);added++;} }
+  }
+
+  document.getElementById('charset').value = newChars;
+  document.getElementById('asciiInput').value = '';
+  onCharsetChange();
+  flashInfo(added > 0 ? `✓ ${added} carácter${added!==1?'es':''} agregado${added!==1?'s':''}` : 'Ya estaban todos en el charset');
+}
+
+function applyPreset(name) {
+  let str = '';
+  if (name==='az')       for(let i=97; i<=122;i++) str+=String.fromCharCode(i);
+  if (name==='AZ')       for(let i=65; i<=90; i++) str+=String.fromCharCode(i);
+  if (name==='09')       for(let i=48; i<=57; i++) str+=String.fromCharCode(i);
+  if (name==='ascii')    for(let i=32; i<=126;i++) str+=String.fromCharCode(i);
+  if (name==='ascii_ext')for(let i=32; i<=255;i++) str+=String.fromCharCode(i);
+  if (name==='exam')     str = EXAM_CHARSET;
+
+  // Reemplaza completamente el charset con el preset
+  document.getElementById('charset').value = str;
+  onCharsetChange();
+  flashInfo(`✓ Preset cargado (${toChars(str).length} caracteres)`);
+}
+
+function flashInfo(msg) {
+  const el = document.getElementById('charsetInfo');
+  el.style.color = 'var(--accent2)';
+  el.textContent = msg;
+  setTimeout(() => { el.style.color=''; renderCharsetPreview(); }, 2000);
+}
+
+// ── Módulo ───────────────────────────────────────────
+function selectModule(mod) {
+  currentModule = mod;
+  document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.module-btn.${mod}`).classList.add('active');
+  const isCesar = mod === 'cesar';
+  document.getElementById('shiftSection').style.display = isCesar ? 'grid' : 'none';
+  document.getElementById('panelTitle').textContent = isCesar ? 'Módulo César' : 'Módulo Atbash';
+  const badge = document.getElementById('moduleBadge');
+  badge.textContent = isCesar ? 'CÉSAR' : 'ATBASH';
+  badge.className   = isCesar ? 'badge' : 'badge atbash-badge';
+  renderAlphaTable();
+}
+
+// ── Shift ─────────────────────────────────────────────
+function updateShift() {
+  document.getElementById('shiftVal').textContent = document.getElementById('shiftRange').value;
+  renderAlphaTable();
+}
+function updateShiftMax() {
+  const n = toChars(getCharset()).length;
+  const range = document.getElementById('shiftRange');
+  const max = Math.max(1, n-1);
+  range.max = max;
+  if (parseInt(range.value) > max) range.value = max;
+  document.getElementById('shiftVal').textContent = range.value;
+}
+
+// ── Proceso ───────────────────────────────────────────
+function process(mode) {
+  const text    = document.getElementById('inputText').value;
+  const charset = getCharset();
+  const shift   = parseInt(document.getElementById('shiftRange').value);
+  if (!text.trim()) { showResult('⚠ Ingresa un texto primero.', mode); return; }
+  const result = currentModule === 'cesar'
+    ? cesarCipher(text, charset, shift, mode === 'decipher')
+    : atbashCipher(text, charset);
+  showResult(result, mode);
+  renderAlphaTable();
+}
+
+function showResult(text, mode) {
+  document.getElementById('resultLabel').textContent = mode==='cipher' ? '🔒 Texto Cifrado' : '🔓 Texto Descifrado';
+  const el = document.getElementById('resultText');
+  el.textContent = text;
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+}
+
+function copyResult() {
+  navigator.clipboard.writeText(document.getElementById('resultText').textContent).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 1500);
+  });
+}
+
+function clearAll() {
+  document.getElementById('inputText').value = '';
+  document.getElementById('resultText').textContent = 'El resultado aparecerá aquí...';
+  document.getElementById('resultLabel').textContent = 'Resultado';
+  bruteVisible = false;
+  document.getElementById('brutePanel').classList.remove('visible');
+}
+
+// ── Fuerza Bruta ─────────────────────────────────────
+function toggleBrute() {
+  if (!document.getElementById('inputText').value.trim()) { alert('Ingresa un texto cifrado primero.'); return; }
+  bruteVisible = !bruteVisible;
+  const panel = document.getElementById('brutePanel');
+  panel.classList.toggle('visible', bruteVisible);
+  if (bruteVisible) { renderBrute(); panel.scrollIntoView({behavior:'smooth',block:'start'}); }
+}
+
+function showBruteTab(tab) {
+  bruteTab = tab;
+  document.getElementById('tabCesar').classList.toggle('active',  tab==='cesar');
+  document.getElementById('tabAtbash').classList.toggle('active', tab==='atbash');
+  renderBrute();
+}
+
+function renderBrute() {
+  const text      = document.getElementById('inputText').value;
+  const charset   = getCharset();
+  const container = document.getElementById('bruteResults');
+  container.innerHTML = '';
+
+  if (bruteTab === 'atbash') {
+    const result = atbashCipher(text, charset);
+    const score  = scoreText(result);
+    const div = document.createElement('div');
+    div.className = 'brute-atbash-result';
+    div.innerHTML = escapeHtml(result) +
+      (score>0 ? ` <span style="color:var(--accent);font-size:11px;font-style:normal;">★ ${score} pts</span>` : '');
+    div.onclick = () => useResult(result);
+    container.appendChild(div);
+    const hint = document.createElement('div');
+    hint.style.cssText = 'font-size:11px;color:var(--muted);margin-top:10px;text-align:center;';
+    hint.textContent = 'Atbash no tiene clave variable — un solo resultado posible. Clic para usarlo.';
+    container.appendChild(hint);
+    return;
+  }
+
+  const chars = toChars(charset);
+  const n = chars.length;
+  const candidates = [];
+  for (let k=1; k<n; k++) {
+    const result = cesarCipher(text, charset, k, true);
+    candidates.push({ k, result, score: scoreText(result) });
+  }
+  candidates.sort((a,b) => b.score - a.score || a.k - b.k);
+
+  candidates.forEach(({k, result, score}, i) => {
+    const row = document.createElement('div');
+    row.className = 'brute-row';
+    row.style.animationDelay = `${i*8}ms`;
+    const scoreTag = score>0
+      ? `<span style="font-size:10px;color:var(--accent2);padding:2px 6px;border:1px solid rgba(110,200,169,.3);border-radius:4px;">★ ${score}</span>`
+      : `<span style="font-size:10px;color:var(--muted);">—</span>`;
+    row.innerHTML = `
+      <div class="brute-key" title="Clave">${k}</div>
+      <div style="display:flex;flex-direction:column;gap:3px;overflow:hidden;">
+        <div class="brute-text" title="${escapeHtml(result)}">${escapeHtml(result)}</div>
+        <div>${scoreTag}</div>
+      </div>
+      <button class="brute-use-btn" onclick="event.stopPropagation();useResult(${JSON.stringify(result)})">Usar</button>`;
+    if (score>0) row.style.borderColor = 'rgba(110,200,169,.3)';
+    row.onclick = (e) => { if (!e.target.classList.contains('brute-use-btn')) useResult(result); };
+    container.appendChild(row);
+  });
+}
+
+function useResult(text) {
+  document.getElementById('resultText').textContent = text;
+  document.getElementById('resultLabel').textContent = '🔓 Texto Descifrado (seleccionado)';
+  const el = document.getElementById('resultText');
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  document.querySelector('.result-section').scrollIntoView({behavior:'smooth'});
+}
+
+// ── Tabla sustitución ─────────────────────────────────
+function renderAlphaTable() {
+  const charset = getCharset();
+  const chars   = toChars(charset);
+  const shift   = parseInt(document.getElementById('shiftRange').value);
+  const table   = document.getElementById('alphaTable');
+  table.innerHTML = '';
+  const MAX = 50;
+  chars.slice(0, MAX).forEach(ch => {
+    const enc = currentModule==='cesar'
+      ? cesarCipher(ch, charset, shift, false)
+      : atbashCipher(ch, charset);
+    const pair = document.createElement('div');
+    pair.className = 'alpha-pair';
+    pair.innerHTML = `
+      <div class="alpha-char alpha-orig" title="${cpHex(ch)} (${ch.codePointAt(0)})">${ch===' '?'·':escapeHtml(ch)}</div>
+      <div class="alpha-arrow">↓</div>
+      <div class="alpha-char alpha-enc"  title="${cpHex(enc)} (${enc.codePointAt(0)})">${enc===' '?'·':escapeHtml(enc)}</div>`;
+    table.appendChild(pair);
+  });
+  if (chars.length > MAX) {
+    const more = document.createElement('div');
+    more.style.cssText = 'display:flex;align-items:center;color:var(--muted);font-size:11px;padding:0 8px;';
+    more.textContent = `+${chars.length-MAX} más`;
+    table.appendChild(more);
+  }
+}
+
+// ── Init ─────────────────────────────────────────────
+updateShiftMax();
+renderCharsetPreview();
+renderAlphaTable();
 </script>
 </body>
 </html>
